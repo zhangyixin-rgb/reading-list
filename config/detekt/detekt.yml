@@ -1,0 +1,28 @@
+build:
+  maxIssues: 0
+
+complexity:
+  LongMethod:
+    threshold: 80
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 8
+  CyclomaticComplexMethod:
+    threshold: 20
+  TooManyFunctions:
+    thresholdInFiles: 20
+    thresholdInClasses: 25
+    thresholdInInterfaces: 15
+    thresholdInObjects: 20
+
+style:
+  ReturnCount:
+    max: 6
+  ThrowsCount:
+    max: 6
+  MagicNumber:
+    ignoreNumbers: ['-1', '0', '1', '2']
+  MaxLineLength:
+    maxLineLength: 120
+    excludePackageStatements: true
+    excludeImportStatements: true
