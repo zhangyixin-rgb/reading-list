@@ -7,7 +7,7 @@
 **Author:** Zhang Yixin  
 **Student ID:** 202583930036  
 **Repository:** https://github.com/zhangyixin-rgb/reading-list  
-**Version assessed:** `v1.1.0`  
+**Version assessed:** `v1.1.1`  
 **Date:** 28 November 2026
 
 ---
@@ -328,6 +328,18 @@ Measured on a clean build (`./gradlew clean build`, no build cache):
 | Detekt findings | 0 |
 | Build | `BUILD SUCCESSFUL` in 28 s |
 
+The same build ran on a GitHub-hosted Ubuntu runner with JDK 21, where there is no
+local Gradle installation and no seeded cache: the wrapper downloaded the
+distribution itself, verified its checksum, and the job finished green. That is
+the clean-machine check the assignment asks for, done on a machine that is not
+this one:
+
+```
+build | 993c353 | completed | success
+  [5] Build, test, analyse -> success
+  [6] Upload reports -> success
+```
+
 Coverage by package:
 
 | Package | Lines | Branches |
@@ -377,6 +389,16 @@ BUILD SUCCESSFUL in 28s
 4. **Two detekt findings.** Both were real: a bare `9` used as a column width, and
    an exception discarded when an atomic move is unsupported. Both were fixed in
    the code rather than suppressed.
+
+5. **The checksum that only failed where it mattered.** The wrapper's
+   `distributionSha256Sum` was written in upper case. Locally the distribution
+   was already in the cache, so the checksum was never compared; on the CI runner
+   it was, and the first workflow run failed with "Verification of Gradle
+   distribution failed". The digest was correct, only its letter case was not, and
+   the wrapper compares lower-case hex. This is the clearest example in the
+   project of why a second machine matters: the check existed, passed locally by
+   accident, and only told the truth when the build had to download the
+   distribution itself.
 
 ## 7. Limitations and future work
 
