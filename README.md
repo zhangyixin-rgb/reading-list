@@ -1,5 +1,7 @@
 # reading-list
 
+[![build](https://github.com/zhangyixin-rgb/reading-list/actions/workflows/build.yml/badge.svg)](https://github.com/zhangyixin-rgb/reading-list/actions/workflows/build.yml)
+
 A command-line reading list manager written in Kotlin. It keeps a small library of
 books on disk, tracks whether each one is still to read, in progress or finished,
 and answers questions such as "what should I read next?" and "how am I doing?".
@@ -135,7 +137,9 @@ The suite has three layers:
 
 Run `./gradlew test` for the results and `./gradlew jacocoTestReport` for the
 HTML report in `build/reports/jacoco/test/html/index.html`. The build runs the
-coverage task automatically after the tests.
+coverage task automatically after the tests, and `jacocoTestCoverageVerification`
+fails the build below 80% line coverage or 70% branch coverage. The gate is part
+of `check`, so `./gradlew build` refuses a change that lowers coverage.
 
 <!-- COVERAGE-RESULTS -->
 
@@ -144,6 +148,13 @@ coverage **92.9% (403 of 434 lines)** and branch coverage **76.9% (183 of 238
 branches)**. The lines that remain uncovered are the `main` wiring function and
 the defensive catch blocks for filesystem failures that cannot be triggered from
 a test.
+
+## Continuous integration
+
+`.github/workflows/build.yml` runs `./gradlew build` on JDK 21 for every push to
+`main` and every pull request. Because `build` depends on `check`, the same
+coverage and static-analysis gates that run locally also run in CI, and the test,
+coverage and analysis reports are uploaded as artefacts even when the build fails.
 
 ## Static analysis
 
